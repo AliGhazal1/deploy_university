@@ -334,7 +334,7 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
       sessionStorage.clear();
       
       // Force redirect to ensure login page loads
-      window.location.href = '/login';
+      window.location.href = '/';
       
     } catch (error) {
       console.error('Logout error:', error);
@@ -342,7 +342,7 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
       setUser(null);
       localStorage.clear();
       sessionStorage.clear();
-      window.location.href = '/login';
+      window.location.href = '/';
     }
   };
 
