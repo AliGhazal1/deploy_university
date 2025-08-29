@@ -322,19 +322,19 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
 
   const handleLogout = async () => {
     try {
-      // Clear user state immediately
+      // Clear user state immediately before any async operations
       setUser(null);
       setContactSellerInfo(null);
+      
+      // Sign out from Supabase
+      await supabase.auth.signOut({ scope: 'global' });
       
       // Clear all storage
       localStorage.clear();
       sessionStorage.clear();
       
-      // Sign out from Supabase
-      await supabase.auth.signOut({ scope: 'global' });
-      
-      // Force redirect to login page
-      window.location.href = '/';
+      // Force redirect to ensure login page loads
+      window.location.href = '/login';
       
     } catch (error) {
       console.error('Logout error:', error);
@@ -342,7 +342,7 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
       setUser(null);
       localStorage.clear();
       sessionStorage.clear();
-      window.location.href = '/';
+      window.location.href = '/login';
     }
   };
 

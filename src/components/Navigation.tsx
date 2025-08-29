@@ -12,10 +12,6 @@ export default function Navigation({ onLogout }: NavigationProps) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = async () => {
-    onLogout();
-  };
-
   const navItems = [
     { name: 'Home', url: '/', icon: Home },
     { name: 'Profile', url: '/profile', icon: User },
@@ -38,9 +34,10 @@ export default function Navigation({ onLogout }: NavigationProps) {
       <AnimeNavBar 
         items={navItems}
         defaultActive={getCurrentTab()}
+        onLogout={onLogout}
       />
 
-      {/* Logo and Logout - positioned separately with glassmorphism */}
+      {/* Logo - positioned separately with glassmorphism */}
       <div className="fixed top-3 left-3 md:left-5 z-[9998]">
         <Link to="/" className="group flex items-center space-x-2 glass px-3 py-1.5 rounded-full hover:scale-105 transition-all duration-300">
           <div className="relative">
@@ -55,16 +52,6 @@ export default function Navigation({ onLogout }: NavigationProps) {
             Campus Connect
           </h1>
         </Link>
-      </div>
-
-      <div className="fixed top-3 right-3 md:right-5 z-[9998]">
-        <button
-          onClick={handleLogout}
-          className="group inline-flex items-center px-3 py-1.5 glass text-zinc-300 hover:text-white text-xs font-medium rounded-full transition-all duration-300 hover:scale-105 gradient-border"
-        >
-          <LogOut size={14} className="mr-1.5 group-hover:rotate-12 transition-transform" />
-          <span className="hidden sm:inline">Logout</span>
-        </button>
       </div>
 
       {/* Mobile menu fallback for very small screens */}
@@ -103,15 +90,6 @@ export default function Navigation({ onLogout }: NavigationProps) {
                   </Link>
                 );
               })}
-              <button
-                onClick={handleLogout}
-                className="w-full text-left block px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
-              >
-                <div className="flex items-center">
-                  <LogOut size={16} className="mr-3" />
-                  Logout
-                </div>
-              </button>
             </div>
           </div>
         )}

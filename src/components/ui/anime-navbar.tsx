@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, useLocation } from "react-router-dom"
-import { LucideIcon } from "lucide-react"
+import { LucideIcon, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -16,9 +16,10 @@ interface NavBarProps {
   items: NavItem[]
   className?: string
   defaultActive?: string
+  onLogout?: () => void
 }
 
-export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBarProps) {
+export function AnimeNavBar({ items, className, defaultActive = "Home", onLogout }: NavBarProps) {
   const location = useLocation()
   const [mounted, setMounted] = useState(false)
   const [hoveredTab, setHoveredTab] = useState<string | null>(null)
@@ -268,6 +269,47 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
               </Link>
             )
           })}
+          
+          {/* Logout Button */}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              onMouseEnter={() => setHoveredTab('logout')}
+              onMouseLeave={() => setHoveredTab(null)}
+              className={cn(
+                "relative cursor-pointer text-xs md:text-sm font-semibold px-2 py-2 md:px-4 md:py-2.5 rounded-full transition-all duration-300",
+                "text-white/70 hover:text-white"
+              )}
+              type="button"
+            >
+              <motion.span
+                className="hidden sm:inline relative z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                Logout
+              </motion.span>
+              <motion.span 
+                className="sm:hidden relative z-10 flex items-center justify-center"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <LogOut size={16} strokeWidth={2.5} />
+              </motion.span>
+        
+              <AnimatePresence>
+                {hoveredTab === 'logout' && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="absolute inset-0 bg-red-500/20 rounded-full -z-10"
+                  />
+                )}
+              </AnimatePresence>
+            </button>
+          )}
         </motion.div>
       </div>
     </div>
