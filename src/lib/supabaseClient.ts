@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import { Meta } from 'react-router-dom'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL  as string
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY  as string
@@ -48,13 +47,13 @@ export interface EventRSVP {
 }
 
 export interface MarketplaceListing {
-  id: string
-  user_id: string
+  id: string // UUID
+  created_by: string // UUID reference to auth.users
   title: string
   description?: string
-  price_cents: number
-  category?: 'errand' | 'job' | 'product'
-  status: 'active' | 'sold' | 'inactive'
+  category: string
+  price: number // Decimal, not cents
+  images: string[] // Array of image URLs
   created_at: string
   updated_at: string
 }
@@ -70,7 +69,7 @@ export interface Message {
 
 export interface RewardWallet {
   user_id: string
-  points_balance: number
+  points: number
   updated_at: string
 }
 
@@ -101,5 +100,13 @@ export interface CheckIn {
   user_id: string
   event_id: string
   points_awarded: number
+  created_at: string
+}
+
+export interface AdminProfile {
+  id: string
+  user_id: string
+  role: string
+  permissions: string[]
   created_at: string
 }

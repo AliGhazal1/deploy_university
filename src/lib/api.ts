@@ -106,7 +106,7 @@ class ApiClient {
 
   // Auth endpoints
   async login(email: string, password: string) {
-    const response = await this.request<{ token: string; refresh_token: string; user: User }>('/auth/login', {
+    const response = await this.request<{ token: string; user: User; message?: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });

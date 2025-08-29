@@ -36,9 +36,9 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
 
     const userResult = await db.query(
       `SELECT u.id, u.email, u.name, u.role, u.degree, u.created_at, u.is_active,
-              p.survey_data, p.availability, p.free_time, p.updated_at as profile_updated
+              p.interests, p.availability, p.free_time, p.updated_at as profile_updated
        FROM users u
-       LEFT JOIN profiles p ON u.id = p.user_id
+       LEFT JOIN user_profiles p ON u.id = p.user_id
        WHERE u.id = $1`,
       [userId]
     );
@@ -59,9 +59,9 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
         created_at: user.created_at,
         is_active: user.is_active,
         profile: {
-          survey_data: user.survey_data || {},
-          availability: user.availability || [],
-          free_time: user.free_time || [],
+          interests: user.interests || [],
+          availability: user.availability || {},
+          free_time: user.free_time || {},
           updated_at: user.profile_updated
         }
       }
@@ -101,7 +101,9 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
  */
 router.get('/', authenticateToken, requireRole(['admin']), async (req, res, next) => {
   try {
-    const { role, page = 1, limit = 20 } = req.query;
+    const role = req.query.role;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 20;
     const offset = (page - 1) * limit;
 
     let query = `
@@ -136,10 +138,10 @@ router.get('/', authenticateToken, requireRole(['admin']), async (req, res, next
     res.json({
       users,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page,
+        limit,
         total: parseInt(totalCount),
-        pages: Math.ceil(totalCount / limit)
+        pages: Math.ceil(parseInt(totalCount) / limit)
       }
     });
   } catch (error) {

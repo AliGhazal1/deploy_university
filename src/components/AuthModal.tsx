@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { supabase } from '../lib/supabaseClient'
 import { apiClient } from '../lib/api'
 
 interface AuthModalProps {
@@ -88,11 +87,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose, onAuthed, defaultT
     setError(null)
     setSuccess(null)
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-      if (signInError) throw signInError
-      
-      const { data } = await supabase.auth.getUser()
-      onAuthed?.(data.user?.email)
+      const response = await apiClient.login(email, password)
+      onAuthed?.(response.user?.email)
       onClose()
     } catch (err: any) {
       setError(err?.message ?? 'Authentication failed')
@@ -118,9 +114,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, onClose, onAuthed, defaultT
       const response = await apiClient.signupWithProfile(signupData)
       
       if (response.token) {
-        // Store token and user data
-        localStorage.setItem('token', response.token)
-        localStorage.setItem('user', JSON.stringify(response.user))
         onAuthed?.(response.user.email)
         onClose()
       }

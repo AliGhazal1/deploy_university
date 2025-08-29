@@ -206,7 +206,7 @@ router.post('/login', async (req, res, next) => {
 
     // Get user
     const userResult = await db.query(
-      'SELECT id, email, password_hash, name, role, degree, is_active FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, name, role, degree, university, is_active FROM users WHERE email = $1',
       [email]
     );
 
@@ -266,7 +266,7 @@ router.post('/login', async (req, res, next) => {
 router.get('/me', authenticateToken, async (req, res, next) => {
   try {
     const userResult = await db.query(
-      'SELECT id, email, name, role, degree, created_at FROM users WHERE id = $1',
+      'SELECT id, email, name, role, degree, university, created_at FROM users WHERE id = $1',
       [req.user.id]
     );
 
