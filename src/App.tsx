@@ -31,16 +31,16 @@ function HomePage({ user }: { user: User }) {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch user stats
+      // Fetch user stats using correct table names
       const [walletData, eventsData, userListingsData, messagesData] = await Promise.all([
         supabase.from('reward_wallets').select('points').eq('user_id', user.id).single(),
         supabase.from('checkins').select('*').eq('user_id', user.id),
-        supabase.from('marketplace_items').select('*').eq('seller_id', user.id),
+        supabase.from('marketplace_listings').select('*').eq('seller_id', user.id),
         supabase.from('messages').select('*').eq('receiver_id', user.id)
       ]);
 
       const { data: allItems } = await supabase
-        .from('marketplace')
+        .from('marketplace_listings')
         .select('*');
 
       const totalMarketplaceCount = allItems?.length ?? 0;
@@ -62,9 +62,9 @@ function HomePage({ user }: { user: User }) {
 
       // Fetch recent marketplace listings
       const { data: listings } = await supabase
-        .from('marketplace_items')
+        .from('marketplace_listings')
         .select('*')
-        .eq('is_available', true)
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(3);
       setRecentListings(listings || []);
