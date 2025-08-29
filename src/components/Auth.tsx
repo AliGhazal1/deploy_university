@@ -223,7 +223,7 @@ export default function Auth({ onAuthChange }: AuthProps) {
             {/* Logo and text overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 z-10">
 
-                <img src="University-connect-logo.png" alt="University Connect" className="h-50 w-50 mb-4" />
+                <img src="/University-connect-logo.png" alt="University Connect" className="h-50 w-50 mb-4" />
 
               <motion.h2 
                 initial={{ opacity: 0, y: -20 }}
