@@ -11,7 +11,7 @@ import RewardSystem from './components/RewardSystem';
 import CheckInSystem from './components/CheckInSystem';
 import AdminCouponManager from './components/AdminCouponManager';
 import ProfileUpdateModal from './components/ProfileUpdateModal';
-import { supabase } from './lib/supabaseClient';
+import { supabase, supabaseUrl } from './lib/supabaseClient';
 import { Calendar, ShoppingBag, Trophy, QrCode, MessageCircle, TrendingUp, Users, Star, Sparkles, Activity, Zap, Target } from 'lucide-react';
 
 function HomePage({ user }: { user: User }) {
@@ -35,12 +35,12 @@ function HomePage({ user }: { user: User }) {
       const [walletData, eventsData, userListingsData, messagesData] = await Promise.all([
         supabase.from('reward_wallets').select('points').eq('user_id', user.id).single(),
         supabase.from('checkins').select('*').eq('user_id', user.id),
-        supabase.from('marketplace_listings').select('*').eq('seller_id', user.id),
-        supabase.from('messages').select('*').eq('receiver_id', user.id)
+        supabase.from('marketplace').select('*').eq('created_by', user.id),
+        supabase.from('messages').select('*').eq('receiver_user_id', user.id)
       ]);
 
       const { data: allItems } = await supabase
-        .from('marketplace_listings')
+        .from('marketplace')
         .select('*');
 
       const totalMarketplaceCount = allItems?.length ?? 0;
@@ -62,7 +62,7 @@ function HomePage({ user }: { user: User }) {
 
       // Fetch recent marketplace listings
       const { data: listings } = await supabase
-        .from('marketplace_listings')
+        .from('marketplace')
         .select('*')
         .eq('status', 'active')
         .order('created_at', { ascending: false })
@@ -322,28 +322,27 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
 
   const handleLogout = async () => {
     try {
-      // Clear any app state
+      // Clear user state immediately
+      setUser(null);
       setContactSellerInfo(null);
       
-      // Clear Supabase session
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error('Logout error:', error);
-      }
-      
-      // Clear any cached data
+      // Clear all storage
       localStorage.clear();
       sessionStorage.clear();
       
-      // Force clear user state immediately
-      setUser(null);
+      // Sign out from Supabase
+      await supabase.auth.signOut({ scope: 'global' });
       
-      // The auth state change listener in App component will handle the rest
+      // Force redirect to login page
+      window.location.href = '/';
+      
     } catch (error) {
       console.error('Logout error:', error);
-      // Force user state reset even if signOut fails
+      // Force clear and redirect even on error
       setUser(null);
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/';
     }
   };
 

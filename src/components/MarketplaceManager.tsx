@@ -40,7 +40,7 @@ export default function MarketplaceManager({ user, onContactSeller }: Marketplac
   const fetchListings = async () => {
     try {
       const { data, error } = await supabase
-        .from('marketplace_listings')
+        .from('marketplace')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -86,7 +86,7 @@ export default function MarketplaceManager({ user, onContactSeller }: Marketplac
       if (!Number.isFinite(formData.price) || formData.price < 0) throw new Error('Price must be >= 0');
       
       const { data, error } = await supabase
-        .from('marketplace_listings')
+        .from('marketplace')
         .insert([{
           ...formData,
           created_by: user.id,
@@ -115,7 +115,7 @@ export default function MarketplaceManager({ user, onContactSeller }: Marketplac
   const deleteListing = async (listingId: string) => {
     try {
       const { error } = await supabase
-        .from('marketplace_listings')
+        .from('marketplace')
         .delete()
         .eq('id', listingId);
 

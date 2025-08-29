@@ -7,7 +7,17 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    storageKey: 'university-connect-auth',
+    storage: window.localStorage,
+    autoRefreshToken: true,
+    persistSession: false,
+    detectSessionInUrl: true
+  }
+})
+
+export { supabaseUrl }
 
 // Database types
 export interface Profile {
