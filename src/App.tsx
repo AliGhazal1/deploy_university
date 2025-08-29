@@ -322,16 +322,24 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
 
   const handleLogout = async () => {
     try {
+      // Clear any app state
       setContactSellerInfo(null);
       
       // Clear Supabase session
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Logout error:', error);
+      }
       
       // Clear any cached data
       localStorage.clear();
       sessionStorage.clear();
       
-      // The auth state change listener will handle setting user to null
+      // Force clear user state immediately
+      setUser(null);
+      
+      // The auth state change listener in App component will handle the rest
     } catch (error) {
       console.error('Logout error:', error);
       // Force user state reset even if signOut fails
