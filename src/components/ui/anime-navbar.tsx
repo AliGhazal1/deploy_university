@@ -46,7 +46,7 @@ export function AnimeNavBar({ items, className, defaultActive = "Home", onLogout
     <div className="fixed top-2 left-0 right-0 z-[9999]">
       <div className="flex justify-center px-2">
         <motion.div 
-          className="flex items-center gap-1 md:gap-2 bg-black/50 border border-white/10 backdrop-blur-lg py-1 px-1 md:py-1.5 md:px-2 rounded-full shadow-lg relative max-w-[95vw] md:max-w-none"
+          className="flex items-center gap-0.5 md:gap-1 bg-black/50 border border-white/10 backdrop-blur-lg py-1 px-1 md:py-1.5 md:px-2 rounded-full shadow-lg relative max-w-[95vw] md:max-w-none"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{
