@@ -225,7 +225,7 @@ export default function Auth({ onAuthChange }: AuthProps) {
               <motion.img 
                 src="/University-connect-logo.png" 
                 alt="University Connect" 
-                className="h-32 w-32 mb-6 object-contain"
+                className="h-40 w-40 mb-3 object-contain"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
