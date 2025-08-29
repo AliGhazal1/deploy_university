@@ -300,12 +300,13 @@ function HomePage({ user }: { user: User }) {
   );
 }
 
-function AppContent({ user, showProfileModal, setShowProfileModal, handleProfileUpdated, profileLoading }: {
+function AppContent({ user, showProfileModal, setShowProfileModal, handleProfileUpdated, profileLoading, setUser }: {
   user: User;
   showProfileModal: boolean;
   setShowProfileModal: (show: boolean) => void;
   handleProfileUpdated: () => void;
   profileLoading: boolean;
+  setUser: (user: User | null) => void;
 }) {
   const navigate = useNavigate();
   const [contactSellerInfo, setContactSellerInfo] = useState<{
@@ -320,8 +321,22 @@ function AppContent({ user, showProfileModal, setShowProfileModal, handleProfile
   };
 
   const handleLogout = async () => {
-    setContactSellerInfo(null);
-    await supabase.auth.signOut();
+    try {
+      setContactSellerInfo(null);
+      
+      // Clear Supabase session
+      await supabase.auth.signOut();
+      
+      // Clear any cached data
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // The auth state change listener will handle setting user to null
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force user state reset even if signOut fails
+      setUser(null);
+    }
   };
 
   return (
@@ -447,6 +462,7 @@ function App() {
         setShowProfileModal={setShowProfileModal}
         handleProfileUpdated={handleProfileUpdated}
         profileLoading={profileLoading}
+        setUser={setUser}
       />
     </Router>
   );

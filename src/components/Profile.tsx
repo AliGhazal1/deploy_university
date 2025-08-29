@@ -159,9 +159,14 @@ const Profile: React.FC = () => {
     try {
       await supabase.auth.signOut();
       apiClient.clearToken();
-      navigate('/survey');
+      localStorage.clear();
+      sessionStorage.clear();
+      // Force navigation to auth page
+      window.location.href = '/';
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('Logout error:', error);
+      // Force navigation even if signOut fails
+      window.location.href = '/';
     }
   };
 

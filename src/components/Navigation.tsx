@@ -13,7 +13,6 @@ export default function Navigation({ onLogout }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
     onLogout();
   };
 
